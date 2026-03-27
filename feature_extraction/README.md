@@ -17,7 +17,10 @@ You can run the pipeline directly via your terminal.
 cd feature_extraction
 python pipeline.py --input /path/to/your/data.edf --output results.csv --subject "Subj_01" --condition "Task_A"
 ```
-
+example 2 - 
+```
+$  python3 pipeline.py --input /Volumes/ss/Project_EEG/DATASET/Ana_MS_Thesis/Terracciano1B.edf --output /Volumes/ss/Project_EEG/DATASET/Ana_MS_Thesis/results.csv --subject "Terracciano1B.edf"
+```
 ### Arguments:
 * `--input`: Path to the `.edf` or `.mat` file (Required).
 * `--output`: Output CSV filename (Default: `features_extracted.csv`).
