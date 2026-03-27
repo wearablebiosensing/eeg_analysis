@@ -57,6 +57,21 @@ $  python3 pipeline.py --input /Volumes/ss/Project_EEG/DATASET/Ana_MS_Thesis/Ter
 * `--condition`: The condition or task name to attach as metadata (Optional).
 * `--no_preprocess`: Add this flag if you want to skip the Bandpass & ASR preprocessing steps.
 
+## CSV Output Format
+
+The output is a structured CSV file (`results.csv` or otherwise specified) where **each row represents a single EEG channel's extracted features**.
+
+The columns generally follow this structure:
+
+| Column Name | Description |
+| :--- | :--- |
+| `channel` | The name of the EEG channel (e.g., `Fp1-Av`, `Cz-Av`). |
+| `subject` | The subject ID provided via the `--subject` argument. |
+| `condition` | The experimental condition provided via `--condition`. |
+| `fs` | The sampling frequency of the recorded data. |
+| `fooof_theta_*` | Extracted features from the FOOOF module (e.g., `fooof_theta_peak_freq`, `fooof_theta_peak_power`, `fooof_theta_peak_bw`). |
+| `[extractor_name]_[feature_name]` | Any dynamically added features from additional extractors in `features.py`. |
+
 ## Running inside a Jupyter Notebook or Python Script
 
 You can also import the pipeline directly into a Jupyter Notebook cell:
