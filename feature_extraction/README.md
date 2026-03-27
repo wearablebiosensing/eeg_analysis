@@ -9,6 +9,35 @@ This directory contains a modular pipeline for extracting Event-Related Potentia
 * **`features.py`**: Contains the generic `FeatureExtractor` base class, and the implemented `FOOOFThetaPeakExtractor` which computes the FOOOF theta peak frequency keeping the original mathematics.
 * **`pipeline.py`**: The main orchestrator script. It loads `.edf` or `.mat` files, applies preprocessing, and delegates feature extraction across all available channels.
 
+## Pipeline Architecture (Block Diagram)
+
+Below is the step-by-step flowchart of the data processing pipeline:
+
+```mermaid
+graph TD
+    A[Raw EEG Data .edf/.mat] --> B{Load Data}
+    B -->|Extract Signal & fs| C{Preprocessing Required?}
+    
+    %% Preprocessing Flow
+    C -->|Yes| D[Bandpass Filter]
+    D --> E[Artifact Removal ASR]
+    E --> F[Cleaned EEG Signal]
+    
+    C -->|No| F
+    
+    %% Feature Extraction Flow
+    F --> G[Extract Features Channel-by-Channel]
+    
+    subgraph Feature Extraction Module
+        G --> H[FOOOF Theta Peak Extraction]
+        H --> I[Append Extracted Metadata]
+    end
+    
+    %% Output Flow
+    I --> J[Aggregate Channel Data]
+    J --> K[Export as CSV File]
+```
+
 ## How to Run the Pipeline
 
 You can run the pipeline directly via your terminal.
