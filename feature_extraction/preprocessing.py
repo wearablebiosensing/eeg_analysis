@@ -14,8 +14,8 @@ def preprocess_eeg(eeg_data: np.ndarray, fs: float, lowcut=1, highcut=45, order=
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
-    b, a = scipy.signal.butter(order, [low, high], btype='band')
-    eeg_data_filtered = scipy.signal.lfilter(b, a, eeg_data)
+    sos = scipy.signal.butter(order, [low, high], btype='band', output='sos')
+    eeg_data_filtered = scipy.signal.sosfilt(sos, eeg_data)
     
     # # ==========================
     # # ASR

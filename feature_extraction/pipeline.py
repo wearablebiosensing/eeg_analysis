@@ -40,6 +40,38 @@ def load_data(file_path: str):
         # Fallback to defaults or parameters
         fs = 512.0 # Default fallback
         channel_names = [f"CH_{i}" for i in range(eeg_data.shape[0])]
+    elif ext in ['.hdf5', '.h5']:
+        import h5py
+        with h5py.File(file_path, 'r') as f:
+            # g.tec HDF5 typically stores data under 'RawData/Samples'
+            if 'RawData' in f and 'Samples' in f['RawData']:
+                print("eeg data keys ======",f.keys())
+                # HDF5 usually stores as (samples, channels), we need (channels, samples)
+                eeg_data = f['RawData']['Samples'][()].T 
+                # Try to get sampling frequency if available as an attribute
+                fs = f['RawData'].attrs.get('SamplingFrequency', 250.0) 
+            else:
+                print("eeg data keys ======",f.keys())
+                # Fallback: Find the largest dataset in the file
+                largest_ds = None
+                max_size = 0
+                def find_largest_dataset(name, obj):
+                    nonlocal largest_ds, max_size
+                    if isinstance(obj, h5py.Dataset) and obj.size > max_size:
+                        largest_ds = obj[()]
+                        max_size = obj.size
+                f.visititems(find_largest_dataset)
+                
+                if largest_ds is None:
+                    raise ValueError("Could not find any datasets in HDF5 file.")
+                    
+                eeg_data = largest_ds
+                # Ensure shape is (channels, samples)
+                if eeg_data.shape[0] > eeg_data.shape[1]:
+                    eeg_data = eeg_data.T
+                fs = 250.0 # Default fallback
+                
+        channel_names = [f"CH_{i}" for i in range(eeg_data.shape[0])]
     else:
         raise ValueError(f"Unsupported file format: {ext}")
         
@@ -107,6 +139,12 @@ def main():
     eeg_data, fs, channel_names = load_data(args.input)
     print(f"Loaded {eeg_data.shape[0]} channels, {eeg_data.shape[1]} samples at {fs} Hz.")
     
+    # Automatically extract subject ID from filename if not explicitly provided
+    if args.subject == "Unknown":
+        base_name = os.path.basename(args.input)
+        args.subject = base_name.split('_')[0]
+        print(f"Auto-extracted subject ID: {args.subject} from filename.")
+        
     metadata = {
         "subject": args.subject,
         "condition": args.condition,

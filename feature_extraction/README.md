@@ -18,6 +18,11 @@ Viewed README.md
 
 Here is the horizontal version of the pipeline's process diagram. You can replace the one in the `README.md` with this if you'd prefer it to flow from left to right!
 
+
+Viewed README.md
+
+Here is the horizontal version of the pipeline's process diagram. You to flow from left to right!
+
 ```mermaid
 graph LR
     A[Raw EEG Data .edf/.mat] --> B{Load Data}
@@ -42,6 +47,8 @@ graph LR
     I --> J[Aggregate Channel Data]
     J --> K[Export as CSV File]
 ```
+
+
 
 ## How to Run the Pipeline
 
