@@ -14,7 +14,12 @@ This directory contains a modular pipeline for extracting Event-Related Potentia
 Below is the step-by-step flowchart of the data processing pipeline:
 
 ```mermaid
-graph TD
+Viewed README.md
+
+Here is the horizontal version of the pipeline's process diagram. You can replace the one in the `README.md` with this if you'd prefer it to flow from left to right!
+
+```mermaid
+graph LR
     A[Raw EEG Data .edf/.mat] --> B{Load Data}
     B -->|Extract Signal & fs| C{Preprocessing Required?}
     
